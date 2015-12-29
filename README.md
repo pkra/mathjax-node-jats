@@ -13,9 +13,10 @@ PRs welcome.
 
 * automate `img.js` integration
  * currently, you'll need to jump through a couple of hoops due to limitations of MathJax, mathjax-node and jsdom.
-    * download [img.js](https://github.com/mathjax/MathJax-third-party-extensions/blob/master/img/unpacked/img.js)
-    * move it to `node_modules/MathJax/extensions/TeX/`
-    * change the `loadComplete` call at the end of `img.js`
-    * modify `node_module/mathjax-node/lib/mj-single.js` to have `ConfigureMathJax()` load it alongside other TeX extensions.
+    * download [img.js](https://raw.githubusercontent.com/mathjax/MathJax-third-party-extensions/master/img/unpacked/img.js)
+    * move it to `node_modules/MathJax/unpacked/extensions/TeX/`
+    * change the `loadComplete` call at the end of `img.js` to `["loadComplete",MathJax.Ajax,"[MathJax]/extensions/TeX/img.js"]`
+    * modify `node_module/mathjax-node/lib/mj-single.js` to have `ConfigureMathJax()` load it alongside other TeX extensions, i.e., `TeX: {extensions: window.Array("AMSmath.js","AMSsymbols.js","autoload-all.js", "img.js")},
+`
 * integrate xyjax
   * xyjax does not currently work with mathjax-node, but the wrapper is set up so that you can still configure Lens to use MathJax's TeX inputprocessor alongside the MathML. This is not ideal and causes issues (e.g., if there's a label inside an xyjax environment).

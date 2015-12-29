@@ -59,8 +59,7 @@ mjAPI.config({
     menuSettings: {
       semantics: true,
     },
-    "displayAlign": "left",
-    "displayIndent": "5em" // indents but must be set large enough to overcome equation labels
+    "displayAlign": "left"
   }
 });
 mjAPI.start();
