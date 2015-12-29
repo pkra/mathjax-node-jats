@@ -1,0 +1,9 @@
+{
+  "name": "mathjax-node-jats",
+  "dependencies": {
+    "mathjax-node": "*",
+    "async": "*",
+    "libxmljs": "*",
+    "yargs": "*"
+  }
+}
