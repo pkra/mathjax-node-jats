@@ -1,9 +1,41 @@
 {
   "name": "mathjax-node-jats",
+  "version": "0.0.1",
+  "description": "Simple pre-processor for math in JATS-like XML",
+  "keywords": [
+    "MathJax",
+    "math",
+    "SVG",
+    "MathML",
+    "TeX",
+    "JATS",
+    "NLM",
+    "XML"
+  ],
+  "maintainers": [
+    "Peter Krautzberger <p.krautzberger@gmail.com> (http://www.peterkrautzberger.org)"
+  ],
+  "bugs": {
+    "url": "http://github.com/pkra/mathjax-node-jats/issues"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pkra/mathjax-node-jats.git"
+  },
   "dependencies": {
     "mathjax-node": "*",
     "async": "*",
     "libxmljs": "*",
     "yargs": "*"
+  },
+  "main": "./main.js",
+  "scripts": {
+    "postinstall": "sh ./postInstall.sh",
+    "test": "tape test/*.js"
+  },
+  "main": "./main.js",
+  "devDependencies": {
+    "tape": "^4.0.3"
   }
 }
