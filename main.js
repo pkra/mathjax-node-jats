@@ -8,7 +8,7 @@
  *
  * ----------------------------------------------------------------------
  *
- *  Copyright (c) 2014 American Mathematical Society
+ *  Copyright (c) 2014--2016 American Mathematical Society
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,16 +42,17 @@ var argv = require("yargs")
       alias: ('o', 'output')
     },
     outputFormat: {
-      default: "MathML, SVG",
-      describe: "output format(s) to generate; MathML, SVG, or PNG" //NOTE add multiple versions
+      default: "MathML",
+      describe: "output format(s) to generate; e.g., 'MathML, SVG'"
     },
   })
-  .demand(['i', 'o'])
+  .demand(['i'])
   .argv;
 
 var outputFormats = argv.outputFormat.split(/ *, */);
 
 var inputFile = fs.readFileSync(argv.i);
+var outputFile = argv.o || 'post-' + argv.i;
 var xmlDocument = libxmljs.parseXml(inputFile);
 
 mjAPI.config({
@@ -134,7 +135,7 @@ async.each(texMathNodes, processMath, function(err) {
   if (err) {
     throw err;
   }
-  fs.writeFile(argv.o, xmlDocument, function(err) {
+  fs.writeFile(outputFile, xmlDocument, function(err) {
     if (err) {
       throw err;
     } else {
