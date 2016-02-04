@@ -41,6 +41,10 @@ var argv = require("yargs")
       describe: 'specify output file',
       alias: ('o', 'output')
     },
+    p: {
+      describe: 'specify filename prefix',
+      alias: ('p', 'prefix')
+    },
     outputFormat: {
       default: "MathML",
       describe: "output format(s) to generate; e.g., 'MathML, SVG'"
@@ -51,8 +55,9 @@ var argv = require("yargs")
 
 var outputFormats = argv.outputFormat.split(/ *, */);
 
+var prefix = argv.p || 'post-';
 var inputFile = fs.readFileSync(argv.i);
-var outputFile = argv.o || 'post-' + argv.i;
+var outputFile = argv.o || prefix + argv.i.split("/").pop();
 var xmlDocument = libxmljs.parseXml(inputFile);
 
 mjAPI.config({
