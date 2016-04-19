@@ -65,7 +65,15 @@ mjAPI.config({
     menuSettings: {
       semantics: true,
     },
-    "displayAlign": "left"
+    "displayAlign": "left",
+    TeX: {
+      TagSide: "left",
+      Macros: {
+        bigsqcap: "\\mmlToken{mo}{\u2a05}",
+        lefteqn: ["\\rlap{\\displaystyle{#1}}",1]
+        // btran 8
+      }
+    }
   }
 });
 mjAPI.start();
@@ -84,6 +92,7 @@ function processMath(texMathNode, callback) {
     format: (dispStyle ? "TeX" : "inline-TeX"),
     mml: (outputFormats.indexOf('MathML') > -1),
     svg: (outputFormats.indexOf('SVG') > -1),
+    html: (outputFormats.indexOf('HTML') > -1)
   }, function(data) {
     if (!data.errors) {
       if (data.svg) {
@@ -127,6 +136,36 @@ function processMath(texMathNode, callback) {
           }
         }
         thisTexMathNode.addPrevSibling(mmlNode.root());
+      }
+      if (data.html) {
+        // fix up entities
+        // TODO use a more universal library?
+        var html = data.html.replace(/&nbsp;/g, "&#160;");
+        var htmlNode = libxmljs.parseXml(html);
+        var htmlLabeledrows = htmlNode.find('.//*[@class="mjx-mlabeledtr"]');
+        var htmlLabels = htmlNode.find('.//*[@class="mjx-label"]');
+        // adding xlink attributes to labeled table rows
+        for (var idx = 0; idx < htmlLabeledrows.length; idx++) {
+          var currentNode = htmlLabeledrows[idx];
+          currentNode.attr({
+            'xlink:type': 'resource'
+          });
+          currentNode.defineNamespace('xlink', 'http://www.w3.org/1999/xlink');
+          currentNode.attr({
+            'xlink:title': htmlLabels[idx].text()
+          }); // This assumes the label is simple text
+          var idNode = htmlNode.find('.//*[@class="mjx-mrow"][@id]')[0];
+          if (idNode){
+            var currentId = idNode.attr('id');
+            currentNode.attr({
+              'xlink:label': currentId.value()
+            });
+          }
+        }
+        var htmlString = htmlNode.root().toString();
+
+        var resultNode = libxmljs.parseXml("<textual-form><![CDATA[" + htmlString + "]]></textual-form>");
+        thisTexMathNode.addPrevSibling(resultNode.root());
       }
     }
     callback();

@@ -1,5 +1,5 @@
 #!/bin/bash
-find './xml/data/' -type f -name 'b*.xml' | while read line; do
+find './xml/distribution/' -type f -name 'b*.xml' | while read line; do
   echo "Processing file '$line'"
-  node main.js -i $line -p 'xml/preprocessed/'
+  node main.js -i $line -o $line
 done
