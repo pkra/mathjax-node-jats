@@ -32,7 +32,7 @@ var libxmljs = require("libxmljs");
 
 var argv = require("yargs")
   .strict()
-  .usage("Usage: jats -i input.html -o output.html --outputFormat 'MathML'", {
+  .usage("Usage: jats -i input.html -o output.html -f 'MathML'", {
     i: {
       describe: 'specify input file',
       alias: ('i', 'input')
@@ -45,15 +45,15 @@ var argv = require("yargs")
       describe: 'specify filename prefix',
       alias: ('p', 'prefix')
     },
-    outputFormat: {
-      default: "MathML",
+    f: {
+      default: "HTML",
       describe: "output format(s) to generate; e.g., 'MathML, SVG'"
     },
   })
   .demand(['i'])
   .argv;
 
-var outputFormats = argv.outputFormat.split(/ *, */);
+var outputFormats = argv.f.split(/ *, */);
 
 var prefix = argv.p || 'post-';
 var inputFile = fs.readFileSync(argv.i);
