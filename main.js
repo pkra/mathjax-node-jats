@@ -80,11 +80,13 @@ mjAPI.start();
 
 function processMath(texMathNode, callback) {
   var formulaNode = texMathNode.parent();
-  formulaNode.addChild(libxmljs.parseXml("<alternatives/>").root());
-  var alternativesTag = formulaNode.find('.//*[name()="alternatives"]')[0];
-  alternativesTag.addChild(texMathNode.clone());
-  texMathNode.remove();
-  var thisTexMathNode = alternativesTag.find('.//*[name()="tex-math"]')[0];
+  if (formulaNode.name() != "alternatives"){
+    formulaNode.addChild(libxmljs.parseXml("<alternatives/>").root());
+    var alternativesTag = formulaNode.find('.//*[name()="alternatives"]')[0];
+    alternativesTag.addChild(texMathNode.clone());
+    texMathNode.remove();
+  }
+  var thisTexMathNode = formulaNode.find('.//*[name()="tex-math"]')[0];
   var texString = thisTexMathNode.text();
   var dispStyle = (formulaNode.name() === 'disp-formula');
   typeset({
@@ -140,8 +142,8 @@ function processMath(texMathNode, callback) {
       if (data.html) {
         // fix up entities
         // TODO use a more universal library?
-        var html = data.html.replace(/&nbsp;/g, "&#160;");
-        var htmlNode = libxmljs.parseXml(html);
+          // var html = data.html.replace(/&nbsp;/g, "&#160;").replace(/(<img[^>]*)/g,"$1 \/");
+        var htmlNode = libxmljs.parseXml(data.html);
         var htmlLabeledrows = htmlNode.find('.//*[@class="mjx-mlabeledtr"]');
         var htmlLabels = htmlNode.find('.//*[@class="mjx-label"]');
         // adding xlink attributes to labeled table rows
