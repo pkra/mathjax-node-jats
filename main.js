@@ -32,7 +32,7 @@ var libxmljs = require("libxmljs");
 
 var argv = require("yargs")
   .strict()
-  .usage("Usage: jats -i input.html -o output.html -f 'MathML'", {
+  .usage("Usage: node main.js -i input.html -o output.html -f 'SVG'", {
     i: {
       describe: 'specify input file',
       alias: ('i', 'input')
@@ -143,7 +143,7 @@ function processMath(texMathNode, callback) {
         // fix up entities
         // TODO use a more universal library?
           // var html = data.html.replace(/&nbsp;/g, "&#160;").replace(/(<img[^>]*)/g,"$1 \/");
-        var htmlNode = libxmljs.parseXml(data.html);
+        var htmlNode = libxmljs.parseHtml(data.html).find('.//*[name()="span"]')[0];
         var htmlLabeledrows = htmlNode.find('.//*[@class="mjx-mlabeledtr"]');
         var htmlLabels = htmlNode.find('.//*[@class="mjx-label"]');
         // adding xlink attributes to labeled table rows
@@ -164,7 +164,7 @@ function processMath(texMathNode, callback) {
             });
           }
         }
-        var htmlString = htmlNode.root().toString();
+        var htmlString = htmlNode.toString();
 
         var resultNode = libxmljs.parseXml("<textual-form><![CDATA[" + htmlString + "]]></textual-form>");
         thisTexMathNode.addPrevSibling(resultNode.root());
